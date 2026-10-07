@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MANZZ STORE — WEB ORDER</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: #0b0b0b;
+      color: #f0f0f0;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* === LATAR BELAKANG EFEK CAHAYA MERAH & KILAU === */
+    .glow-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 30%, rgba(220, 20, 60, 0.25), transparent 50%),
+                  radial-gradient(circle at 80% 70%, rgba(255, 40, 40, 0.2), transparent 55%),
+                  radial-gradient(circle at 40% 80%, rgba(200, 0, 0, 0.15), transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+      animation: pulseGlow 6s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% { opacity: 0.7; filter: blur(0px); }
+      100% { opacity: 1; filter: blur(2px); }
+    }
+
+    /* kilau bergerak */
+    .shine-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(125deg, transparent 40%, rgba(255, 80, 80, 0.08) 45%, rgba(255, 200, 200, 0.2) 50%, rgba(255, 80, 80, 0.08) 55%, transparent 60%);
+      background-size: 200% 200%;
+      pointer-events: none;
+      z-index: 1;
+      animation: shineMove 8s infinite linear;
+    }
+
+    @keyframes shineMove {
+      0% { background-position: 100% 0%; }
+      100% { background-position: -100% 100%; }
+    }
+
+    /* konten utama di atas efek */
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* === NAVBAR === */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      background: rgba(10, 10, 10, 0.75);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 40, 40, 0.3);
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+      border-radius: 0 0 20px 20px;
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px #ff2a2a, 0 0 20px #ff0000, 0 0 40px #ff4d4d;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo i {
+      color: #ff3a3a;
+      filter: drop-shadow(0 0 8px red);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #eee;
+      font-weight: 500;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+      transition: 0.3s;
+      text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+      padding: 6px 0;
+      border-bottom: 2px solid transparent;
+    }
+
+    .nav-links a:hover {
+      color: #ff4d4d;
+      border-bottom: 2px solid #ff1a1a;
+      text-shadow: 0 0 12px red, 0 0 25px #ff0000;
+    }
+
+    /* menu toggle mobile */
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      color: #ff4d4d;
+      cursor: pointer;
+      text-shadow: 0 0 12px red;
+    }
+
+    /* === HERO SECTION === */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 80vh;
+      padding: 40px 0;
+      gap: 30px;
+    }
+
+    .hero-content {
+      flex: 1 1 400px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 30, 30, 0.15);
+      border: 1px solid rgba(255, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ff7b7b;
+      letter-spacing: 1px;
+      margin-bottom: 25px;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+      text-shadow: 0 0 8px red;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 8vw, 5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 15px #ff0000, 0 0 35px #b30000, 0 0 55px #ff4d4d;
+      margin-bottom: 15px;
+      color: #fff;
+      animation: flickerGlow 3s infinite alternate;
+    }
+
+    @keyframes flickerGlow {
+      0% { text-shadow: 0 0 8px #ff1a1a, 0 0 20px #d40000, 0 0 40px #ff4d4d; }
+      100% { text-shadow: 0 0 18px #ff3a3a, 0 0 45px #ff0000, 0 0 80px #ff8080; }
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: #ccc;
+      max-width: 550px;
+      margin: 20px 0 30px;
+      border-left: 4px solid #ff1a1a;
+      padding-left: 20px;
+      text-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
+    }
+
+    .btn-wa {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(145deg, #d10000, #ff1e1e);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 15px 35px;
+      border-radius: 50px;
+      text-decoration: none;
+      letter-spacing: 1px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 8px 20px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 200, 200, 0.7);
+      transition: 0.3s;
+      text-shadow: 0 0 8px white;
+    }
+
+    .btn-wa:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 35px red, 0 0 60px #ff4d4d, 0 8px 25px black;
+      background: linear-gradient(145deg, #e60000, #ff3333);
+    }
+
+    .hero-image {
+      flex: 1 1 300px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .hero-image .glow-circle {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ff3a3a, #6b0000, #1a0000);
+      box-shadow: 0 0 80px 20px rgba(255, 0, 0, 0.7), 0 0 150px 40px rgba(200, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: float 5s infinite ease-in-out;
+      border: 3px solid rgba(255, 100, 100, 0.6);
+    }
+
+    .hero-image i {
+      font-size: 8rem;
+      color: #fff;
+      text-shadow: 0 0 30px black, 0 0 60px red;
+      filter: drop-shadow(0 0 25px #ff4d4d);
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-18px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* === SECTION STYLES === */
+    section {
+      margin: 100px 0;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #fff;
+      text-shadow: 0 0 10px #ff1a1a, 0 0 30px #b30000, 0 0 50px #ff4d4d;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .section-sub {
+      text-align: center;
+      color: #bbb;
+      max-width: 700px;
+      margin: 0 auto 60px;
+      font-size: 1.1rem;
+      border-bottom: 1px dashed rgba(255, 0, 0, 0.5);
+      padding-bottom: 15px;
+    }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .about-card {
+      background: rgba(20, 5, 5, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 50, 50, 0.4);
+      border-radius: 24px;
+      padding: 30px 25px;
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.2), inset 0 0 15px rgba(255, 0, 0, 0.1);
+      transition: 0.3s;
+    }
+
+    .about-card:hover {
+      border-color: #ff1a1a;
+      box-shadow: 0 0 40px rgba(255, 0, 0, 0.6), inset 0 0 20px rgba(255, 0, 0, 0.3);
+      transform: translateY(-8px);
+    }
+
+    .about-card i {
+      font-size: 2.8rem;
+      color: #ff3a3a;
+      margin-bottom: 15px;
+      text-shadow: 0 0 20px red;
+    }
+
+    .about-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #fff;
+      text-shadow: 0 0 10px #ff4d4d;
+    }
+
+    /* PRODUK GRID */
+    .produk-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .produk-item {
+      background: rgba(15, 5, 5, 0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 60, 60, 0.4);
+      border-radius: 18px;
+      padding: 20px 18px;
+      transition: 0.25s ease;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .produk-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -150%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+      transition: 0.5s;
+    }
+
+    .produk-item:hover::before {
+      left: 150%;
+    }
+
+    .produk-item:hover {
+      border-color: #ff3333;
+      box-shadow: 0 0 35px rgba(255, 0, 0, 0.7), 0 0 60px rgba(255, 0, 0, 0.3);
+      transform: scale(1.02);
+      background: rgba(30, 5, 5, 0.9);
+    }
+
+    .produk-item h4 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 8px #ff1a1a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .produk-item .price {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffd966;
+      text-shadow: 0 0 12px #ffaa00, 0 0 25px #ff4d4d;
+      background: rgba(255, 0, 0, 0.2);
+      padding: 2px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      display: inline-block;
+    }
+
+    .produk-item .desc {
+      font-size: 0.85rem;
+      color: #b0b0b0;
+    }
+
+    .produk-item .order-btn {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #ffb3b3;
+      text-decoration: none;
+      border: 1px solid rgba(255, 0, 0, 0.6);
+      padding: 6px 12px;
+      border-radius: 30px;
+      align-self: flex-start;
+      transition: 0.3s;
+      background: rgba(255, 0, 0, 0.1);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .produk-item .order-btn:hover {
+      background: #ff1a1a;
+      color: #fff;
+      box-shadow: 0 0 18px red;
+      border-color: #ff8080;
+    }
+
+    /* GALERI */
+    .galeri-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .galeri-item {
+      background: linear-gradient(145deg, #1a0404, #2a0808);
+      border: 1px solid rgba(255, 60, 60, 0.5);
+      border-radius: 20px;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+      transition: 0.3s;
+      color: #ffb3b3;
+      font-size: 2.8rem;
+      text-shadow: 0 0 15px red;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .galeri-item span {
+      font-size: 0.9rem;
+      color: #ccc;
+      text-shadow: 0 0 5px black;
+    }
+
+    .galeri-item:hover {
+      transform: scale(1.03) rotate(0.5deg);
+      box-shadow: 0 0 50px red, 0 0 90px rgba(255, 0, 0, 0.5);
+      border-color: #ff4d4d;
+    }
+
+    /* KONTAK */
+    .kontak-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      background: rgba(20, 0, 0, 0.6);
+      backdrop-filter: blur(15px);
+      border-radius: 40px;
+      padding: 50px 40px;
+      border: 1px solid rgba(255, 40, 40, 0.5);
+      box-shadow: 0 0 50px rgba(255, 0, 0, 0.3);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .kontak-info {
+      flex: 1 1 300px;
+    }
+
+    .kontak-info h3 {
+      font-size: 2rem;
+      text-shadow: 0 0 15px red;
+      margin-bottom: 20px;
+    }
+
+    .kontak-info .wa-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 0 20px #ff1a1a, 0 0 40px red;
+      letter-spacing: 2px;
+      background: rgba(255, 0, 0, 0.2);
+      padding: 10px 20px;
+      border-radius: 50px;
+      display: inline-block;
+      margin: 15px 0;
+      border: 1px solid #ff4d4d;
+    }
+
+    .kontak-info .btn-wa {
+      margin-top: 20px;
+    }
+
+    .kontak-icon {
+      flex: 0 0 150px;
+      text-align: center;
+      font-size: 6rem;
+      color: #ff3a3a;
+      text-shadow: 0 0 40px red, 0 0 80px #ff8080;
+      animation: pulseIcon 2s infinite alternate;
+    }
+
+    @keyframes pulseIcon {
+      0% { transform: scale(1); filter: drop-shadow(0 0 15px red); }
+      100% { transform: scale(1.05); filter: drop-shadow(0 0 35px #ff4d4d); }
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 35px 20px;
+      border-top: 1px solid rgba(255, 0, 0, 0.5);
+      margin-top: 80px;
+      color: #aaa;
+      font-size: 0.95rem;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      border-radius: 30px 30px 0 0;
+      box-shadow: 0 -10px 30px rgba(255, 0, 0, 0.2);
+    }
+
+    footer .footer-highlight {
+      color: #ff4d4d;
+      font-weight: 700;
+      text-shadow: 0 0 12px red;
+      letter-spacing: 1px;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 14px 18px;
+        flex-wrap: wrap;
+      }
+
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 15px;
+        padding: 15px 0;
+        border-top: 1px solid rgba(255, 0, 0, 0.3);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .hero {
+        flex-direction: column-reverse;
+        text-align: center;
+      }
+
+      .hero p {
+        border-left: none;
+        padding-left: 0;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-image .glow-circle {
+        width: 220px;
+        height: 220px;
+      }
+
+      .hero-image i {
+        font-size: 5rem;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .kontak-box {
+        padding: 30px 20px;
+        text-align: center;
+      }
+
+      .kontak-info .wa-number {
+        font-size: 1.4rem;
+      }
+
+      .kontak-icon {
+        font-size: 4rem;
+        flex-basis: auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .produk-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .galeri-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .btn-wa {
+        padding: 12px 22px;
+        font-size: 1rem;
+      }
+
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+    }
+
+    /* Animasi fade in */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Efek latar merah & kilau -->
+  <div class="glow-bg"></div>
+  <div class="shine-overlay"></div>
+
+  <div class="container">
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="logo">
+        <i class="fas fa-bolt"></i> MANZZ STORE
+      </div>
+      <div class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+      </div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#produk">Produk</a></li>
+        <li><a href="#galeri">Galeri</a></li>
+        <li><a href="#kontak">Kontak</a></li>
+      </ul>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero">
+      <div class="hero-content">
+        <div class="hero-badge"><i class="fas fa-bolt"></i> ORDER CEPAT • PROSES INSTAN</div>
+        <h1>MANZZ<br>STORE</h1>
+        <p>Pusat order digital & jasa kreatif. Harga bersahabat, pelayanan ngebut. Semua kebutuhan sosmed sampai pembuatan web ada di sini.</p>
+        <a href="https://wa.me/6287721351375?text=Halo%20Admin%20MANZZ%20STORE%2C%20saya%20mau%20order" class="btn-wa" target="_blank">
+          <i class="fab fa-whatsapp"></i> ORDER VIA WHATSAPP
+        </a>
+      </div>
+      <div class="hero-image">
+        <div class="glow-circle">
+          <i class="fas fa-bolt"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="fade-in">
+      <h2 class="section-title">⚡ TENTANG KAMI</h2>
+      <div class="section-sub">MANZZ STORE — solusi digital terpercaya, cepat, dan bergaransi.</div>
+      <div class="about-grid">
+        <div class="about-card">
+          <i class="fas fa-rocket"></i>
+          <h3>Proses Kilat</h3>
+          <p>Order langsung diproses, tanpa ribet. Admin responsif 24 jam.</p>
+        </div>
+        <div class="about-card">
+          <i class="fas fa-shield-hal"></i>
+          <h3>Aman & Terpercaya</h3>
+          <p>Sudah banyak pelanggan puas. Kualitas produk terjamin.</p>
+        </div>
+        <div class="about-card">
+          <i class="fas fa-tags"></i>
+          <h3>Harga Merakyat</h3>
+          <p>Mulai dari 1K aja! Cocok buat semua kalangan.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUK / JASA -->
+    <section id="produk" class="fade-in">
+      <h2 class="section-title">🔥 DAFTAR PRODUK & JASA</h2>
+      <div class="section-sub">Pilih kebutuhanmu, order langsung via WhatsApp admin.</div>
+      <div class="produk-grid" id="produkGrid">
+        <!-- Diisi oleh JavaScript agar rapi -->
+      </div>
+    </section>
+
+    <!-- GALERI -->
+    <section id="galeri" class="fade-in">
+      <h2 class="section-title">✨ GALERI MANZZ</h2>
+      <div class="section-sub">Beberapa hasil & layanan unggulan kami.</div>
+      <div class="galeri-grid">
+        <div class="galeri-item"><i class="fas fa-wifi"></i><span>JPM</span></div>
+        <div class="galeri-item"><i class="fas fa-user-plus"></i><span>Suntik Sosmed</span></div>
+        <div class="galeri-item"><i class="fas fa-mobile-alt"></i><span>Auto SV</span></div>
+        <div class="galeri-item"><i class="fas fa-code"></i><span>Web Cuan</span></div>
+        <div class="galeri-item"><i class="fas fa-paint-brush"></i><span>Logo Maksot</span></div>
+        <div class="galeri-item"><i class="fas fa-qrcode"></i><span>QRIS</span></div>
+      </div>
+    </section>
+
+    <!-- KONTAK -->
+    <section id="kontak" class="fade-in">
+      <h2 class="section-title">📞 HUBUNGI ADMIN</h2>
+      <div class="section-sub">Order atau tanya-tanya dulu, santai aja.</div>
+      <div class="kontak-box">
+        <div class="kontak-info">
+          <h3>Order via WhatsApp</h3>
+          <div class="wa-number"><i class="fab fa-whatsapp"></i> 0877-2135-1375</div>
+          <p style="color:#ccc; margin-bottom:15px;">Klik tombol di bawah untuk langsung chat admin.</p>
+          <a href="https://wa.me/6287721351375?text=Halo%20Admin%20MANZZ%20STORE%2C%20saya%20mau%20order" class="btn-wa" target="_blank">
+            <i class="fab fa-whatsapp"></i> CHAT ADMIN
+          </a>
+        </div>
+        <div class="kontak-icon">
+          <i class="fab fa-whatsapp"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>© 2025 <span class="footer-highlight">MANZZ STORE</span> — WEB ORDER MANZ. All rights reserved.</p>
+      <p style="font-size:0.8rem; margin-top:8px; color:#888;">FED C • Powered by <i class="fas fa-bolt" style="color:#ff4d4d;"></i> MANZZ</p>
+    </footer>
+  </div>
+
+  <script>
+    // === PRODUK DATA (dari user) ===
+    const produkList = [
+      { nama: "JAPOST", harga: "FREE", desc: "Jasa post gratis, tanpa biaya." },
+      { nama: "CV SALDO", harga: "1K", desc: "Convert saldo, proses cepat." },
+      { nama: "MC / REKBER", harga: "PM ADMIN", desc: "Middleman & rekber aman." },
+      { nama: "JPM (JASA PUSH MEMBER)", harga: "—", desc: "Push member ke grup/channel." },
+      { nama: "SUNTIK ALL SOSMED", harga: "—", desc: "Suntik follower, like, view semua platform." },
+      { nama: "APK AUTO SV", harga: "2K", desc: "Aplikasi auto save video/status." },
+      { nama: "APK AUTO RESPON", harga: "1K", desc: "Auto respon chat WhatsApp." },
+      { nama: "APK BUG", harga: "5-20K", desc: "Aplikasi bug sesuai request." },
+      { nama: "LOGO MAKSOT", harga: "2K", desc: "Desain logo maskot keren." },
+      { nama: "LOGO WALLPAPER", harga: "1K", desc: "Wallpaper HD custom." },
+      { nama: "LOGO QRIS", harga: "1K", desc: "Desain QRIS untuk pembayaran." },
+      { nama: "JASA BUAT WEB", harga: "2K", desc: "Pembuatan website simple & modern." },
+      { nama: "STIKER JB", harga: "CHAT ADMIN", desc: "Stiker janda bajakan? Chat aja." },
+      { nama: "PLP STOK", harga: "2K", desc: "Pulsa? Langsung aja." },
+      { nama: "PLP TESTI", harga: "3K", desc: "Testi palsu? Bisa diatur." },
+      { nama: "WEB NOKOS", harga: "1K", desc: "Website nokos (nomor kosong)." },
+      { nama: "WEB CUAN", harga: "5K", desc: "Website penghasil cuan." },
+      { nama: "WEB SUNTIK SOSMED", harga: "2K", desc: "Web untuk suntik sosmed." },
+      { nama: "WEB JPM PRIVAT", harga: "5K", desc: "JPM privat via web." }
+    ];
+
+    // Render produk ke grid
+    const produkGrid = document.getElementById('produkGrid');
+    if (produkGrid) {
+      produkList.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'produk-item';
+        div.innerHTML = `
+          <h4>${item.nama} <span class="price">${item.harga}</span></h4>
+          <div class="desc">${item.desc}</div>
+          <a href="https://wa.me/6287721351375?text=Halo%20Admin%20saya%20mau%20order%20${encodeURIComponent(item.nama)}" target="_blank" class="order-btn">
+            <i class="fab fa-whatsapp"></i> Order
+          </a>
+        `;
+        produkGrid.appendChild(div);
+      });
+    }
+
+    // === MENU TOGGLE mobile ===
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    if (menuToggle) {
+      menuToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+      });
+    }
+
+    // Tutup menu saat link diklik (mobile)
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+      });
+    });
+
+    // === FADE IN SAAT SCROLL ===
+    const faders = document.querySelectorAll('.fade-in');
+    const appearOptions = { threshold: 0.15, rootMargin: "0px 0px -50px 0px" };
+    const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, appearOptions);
+
+    faders.forEach(fader => {
+      appearOnScroll.observe(fader);
+    });
+
+    // Tambahkan class visible ke hero langsung (karena sudah di atas)
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.fade-in').forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight * 0.8) {
+          el.classList.add('visible');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
